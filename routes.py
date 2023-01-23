@@ -23,25 +23,25 @@ async def create(request: RequestUser, db: Session = Depends(get_db)):
 
 @router.get("/")
 async def get(db: Session = Depends(get_db)):
-    _user = crud.get_user(db, 0, 100)
-    return Response(code=200, status="OK", message="Successfully get all data", result=_user).dict(exclude_none=True)
+    user = crud.get_user(db, 0, 100)
+    return Response(code=200, status="OK", message="Successfully get all data", result=user).dict(exclude_none=True)
 
 
 @router.get("/{id}")
 async def get_by_id(id: int, db: Session = Depends(get_db)):
-    _user = crud.get_user_by_id(db, id)
-    return Response(code=200, status="OK", message="Successfully get data by id", result=_user).dict(exclude_none=True)
+    user = crud.get_user_by_id(db, id)
+    return Response(code=200, status="OK", message="Successfully get data by id", result=user).dict(exclude_none=True)
 
 
 @router.put("/update")
 async def update(request: RequestUser, db: Session = Depends(get_db)):
-    _user = crud.update_user(
+    user = crud.update_user(
         db,
         user_id=request.parameter.id,
         name=request.parameter.name,
         age=request.parameter.age
     )
-    return Response(code=200, status="OK", message="Data updated successfully", result=_user)
+    return Response(code=200, status="OK", message="Data updated successfully", result=user)
 
 
 @router.delete("/{id}")

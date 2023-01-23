@@ -12,23 +12,23 @@ def get_user_by_id(db: Session, user_id: int):
 
 
 def create_user(db: Session, user: UserSchema):
-    _user = User(name=user.name, age=user.age)
-    db.add(_user)
+    user = User(name=user.name, age=user.age)
+    db.add(user)
     db.commit()
-    db.refresh(_user)
-    return _user
+    db.refresh(user)
+    return user
 
 
 def delete_user(db: Session, user_id: int):
-    _user = get_user_by_id(db=db, user_id=user_id)
-    db.delete(_user)
+    user = get_user_by_id(db=db, user_id=user_id)
+    db.delete(user)
     db.commit()
     
 
 def update_user(db: Session, user_id: int, name: str, age: int):
-    _user = get_user_by_id(db=db, user_id=user_id)
-    _user.name = name
-    _user.age = age
+    user = get_user_by_id(db=db, user_id=user_id)
+    user.name = name
+    user.age = age
     db.commit()
-    db.refresh(_user)
-    return _user
+    db.refresh(user)
+    return user
