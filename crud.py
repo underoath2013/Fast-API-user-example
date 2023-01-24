@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from model import User
 from schemas import UserSchema
+from exceptions import UserNotFound
 
 
 def get_user(db: Session, skip: int = 0, limit=100):
@@ -8,7 +9,10 @@ def get_user(db: Session, skip: int = 0, limit=100):
 
 
 def get_user_by_id(db: Session, user_id: int):
-    return db.query(User).filter(User.id == user_id).first()
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise UserNotFound
+    return user
 
 
 def create_user(db: Session, user: UserSchema):
@@ -19,16 +23,20 @@ def create_user(db: Session, user: UserSchema):
     return user
 
 
-def delete_user(db: Session, user_id: int):
-    user = get_user_by_id(db=db, user_id=user_id)
-    db.delete(user)
-    db.commit()
-    
-
 def update_user(db: Session, user_id: int, name: str, age: int):
     user = get_user_by_id(db=db, user_id=user_id)
     user.name = name
     user.age = age
+    if not user:
+        raise UserNotFound
     db.commit()
     db.refresh(user)
     return user
+
+
+def delete_user(db: Session, user_id: int):
+    user = get_user_by_id(db=db, user_id=user_id)
+    if not user:
+        raise UserNotFound
+    db.delete(user)
+    db.commit()
