@@ -32,7 +32,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/RequestUser"
+                                "$ref": "#/components/schemas/UserSchema"
                             }
                         }
                     },
@@ -139,7 +139,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/RequestUser"
+                                "$ref": "#/components/schemas/UserSchema"
                             }
                         }
                     },
@@ -221,32 +221,24 @@
                     }
                 }
             },
-            "RequestUser": {
-                "title": "RequestUser",
+            "UserSchema": {
+                "title": "UserSchema",
                 "required": [
-                    "parameter"
+                    "name",
+                    "age"
                 ],
                 "type": "object",
                 "properties": {
-                    "parameter": {
-                        "$ref": "#/components/schemas/UserSchema"
-                    }
-                }
-            },
-            "UserSchema": {
-                "title": "UserSchema",
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "title": "Id",
-                        "type": "integer"
-                    },
                     "name": {
                         "title": "Name",
+                        "maxLength": 100,
+                        "minLength": 1,
                         "type": "string"
                     },
                     "age": {
                         "title": "Age",
+                        "maximum": 100.0,
+                        "minimum": 0.0,
                         "type": "integer"
                     }
                 }

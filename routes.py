@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Path, Depends
 from db_config import SessionLocal
 from sqlalchemy.orm import Session
-from schemas import UserSchema, RequestUser, Response
+from schemas import UserSchema, Response
 import crud
 from sqlalchemy.orm import Session
 from exceptions import UserNotFound
@@ -18,9 +18,9 @@ def get_db():
 
 
 @router.post('/create')
-async def create(request: RequestUser, db: Session = Depends(get_db)):
-    crud.create_user(db, user=request.parameter)
-    return Response(code=200, status="OK", message="Data created successfully").dict(exclude_none=True)
+async def create(request: UserSchema, db: Session = Depends(get_db)):
+    user = crud.create_user(db, user=request)
+    return Response(code=200, status="OK", message="Data created successfully", result=user).dict(exclude_none=True)
 
 
 @router.get("/")
@@ -39,13 +39,13 @@ async def get_by_id(id: int, db: Session = Depends(get_db)):
 
 
 @router.put("/{id}")
-async def update_by_id(id: int, request: RequestUser, db: Session = Depends(get_db)):
+async def update_by_id(id: int, request: UserSchema, db: Session = Depends(get_db)):
     try:
         user = crud.update_user(
             db,
             user_id=id,
-            name=request.parameter.name,
-            age=request.parameter.age
+            name=request.name,
+            age=request.age
         )
     except UserNotFound:
         raise HTTPException(status_code=404, detail="User not found")
@@ -59,4 +59,3 @@ async def delete_by_id(id: int,  db: Session = Depends(get_db)):
     except UserNotFound:
         raise HTTPException(status_code=404, detail="User not found")
     return Response(code=200, status="OK", message="Successfully delete data by id").dict(exclude_none=True)
-

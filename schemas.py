@@ -1,21 +1,16 @@
-from typing import List, Optional, Generic, TypeVar
-from pydantic import BaseModel, Field
+from typing import Optional, Generic, TypeVar
+from pydantic import BaseModel, constr, conint
 from pydantic.generics import GenericModel
 
 T = TypeVar('T')
 
 
 class UserSchema(BaseModel):
-    id: Optional[int] = None
-    name: str = None
-    age: Optional[int] = None
+    name: constr(min_length=1, max_length=100, strict=True)
+    age: conint(ge=0, le=100, strict=True)
 
     class Config:
         orm_mode = True
-
-
-class RequestUser(BaseModel):
-    parameter: UserSchema = Field(...)
 
 
 class Response(GenericModel, Generic[T]):
