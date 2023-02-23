@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  api:
+    build: 
+      context: .
+      dockerfile: api/Dockerfile
+    restart: always
+    ports:
+      - '8000:8000'
+    depends_on:
+      - postgresql
+    volumes:
+      - ./api:/app
+    environment:
+      POSTGRES_HOST: postgresql
+      POSTGRES_USER: postgres
+      POSTGRES_PORT: '5432'
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: users_db
+    command: uvicorn main:app --host 0.0.0.0
+  postgresql:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: users_db
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - '8888:8080'
+
+volumes:
+  postgresql_data:
