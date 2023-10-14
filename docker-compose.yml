@@ -5,7 +5,7 @@ services:
     build: 
       context: .
       dockerfile: api/Dockerfile
-    restart: always
+    # restart: always
     ports:
       - '8000:8000'
     depends_on:
@@ -21,7 +21,9 @@ services:
     command: uvicorn main:app --host 0.0.0.0
   postgresql:
     image: postgres
-    restart: always
+    # restart: always
+    ports:
+      - '5432:5432'
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
@@ -30,9 +32,9 @@ services:
       - postgresql_data:/var/lib/postgresql/data
   adminer:
     image: adminer
-    restart: always
+    # restart: always
     ports:
-      - '8888:8080'
+      - '8880:8080'
 
 volumes:
   postgresql_data:
